@@ -1,0 +1,1 @@
+Lambda with API gateway WebSocket trigger that inserts data in Dynamo DB

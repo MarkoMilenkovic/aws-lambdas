@@ -1,0 +1,1 @@
+Lambda with API gateway WebSocket trigger that send data back to WebSocket client
