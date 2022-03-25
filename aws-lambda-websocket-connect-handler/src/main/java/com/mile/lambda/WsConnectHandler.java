@@ -1,4 +1,4 @@
-package com.mile.lambdas;
+package com.mile.lambda;
 
 import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
