@@ -8,4 +8,4 @@ Architecture diagram:
 ![](Diagram.png)
 
 WebSocket flow:
-![](DiagramWebsockets.png)
+![](DiagramWebsocket.png)
