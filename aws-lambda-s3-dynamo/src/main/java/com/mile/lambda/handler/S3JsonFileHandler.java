@@ -10,12 +10,9 @@ import com.amazonaws.services.lambda.runtime.events.S3Event;
 import com.amazonaws.services.lambda.runtime.events.models.s3.S3EventNotification;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mile.lambda.dto.Body;
-import com.mile.lambda.dto.CustomResponse;
 import com.mile.lambdas.common.PhoneNumber;
 import com.mile.lambdas.common.UserEntity;
 
@@ -24,13 +21,14 @@ import java.io.InputStream;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class S3JsonFileHandler implements RequestHandler<S3Event, CustomResponse<String>> {
+public class S3JsonFileHandler implements RequestHandler<S3Event, Void> {
 
     final AmazonS3 s3Client = AmazonS3ClientBuilder.defaultClient();
     final AmazonDynamoDB dynamoClient = AmazonDynamoDBClientBuilder.defaultClient();
     final DynamoDBMapper dynamoDBMapper = new DynamoDBMapper(dynamoClient);
 
-    public CustomResponse<String> handleRequest(S3Event s3Event, Context context) {
+    @Override
+    public Void handleRequest(S3Event s3Event, Context context) {
         try {
             s3Event.getRecords().forEach(e -> System.out.println("******: " + e));
             S3EventNotification.S3EventNotificationRecord record = s3Event.getRecords().get(0);
@@ -46,7 +44,7 @@ public class S3JsonFileHandler implements RequestHandler<S3Event, CustomResponse
 
             if (somePhoneNumberAlreadyExists(userEntities)) {
                 context.getLogger().log("Some of the phone numbers already exists!");
-                return new CustomResponse<>(new Body<>("Some of the phone numbers already exists!"), 400);
+                return null;
             }
             userEntities.forEach(userEntity -> {
                 userEntity.setId(UUID.randomUUID().toString());
@@ -63,7 +61,7 @@ public class S3JsonFileHandler implements RequestHandler<S3Event, CustomResponse
         } catch (IOException e) {
             context.getLogger().log(e.getMessage());
         }
-        return new CustomResponse<>(new Body<>("Success"), 200);
+        return null;
     }
 
     private boolean somePhoneNumberAlreadyExists(List<UserEntity> userEntities) {
